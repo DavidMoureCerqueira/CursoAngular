@@ -1,0 +1,71 @@
+<h1>DragonBall Page</h1>
+<hr />
+
+<section class="row">
+  <div class="col-12 col-sm-6">
+    <!-- Para agregar lo vamos a hacer con dos variables -->
+    <h3>Agregar: {{ name() }}</h3>
+
+    <!-- Cuando quieres asignar el valor a un atributo y este viene de una variable,señal,etc se pone entre [] y apuntan al valor de esa señal(o lo que sea) -->
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Nombre"
+      [value]="name()"
+      (change)="name.set(txtName.value)"
+      (input)="name.set(txtName.value)"
+      #txtName
+    />
+    <!-- # sirve para hacer refencia de datos en local y la referencia apunta ese input -->
+    <!--Para evitar problemas con el tipado y nulos usando =>(change)="name.set($event.target?.value ?? '')" Vamos a hacer una referencia local y por ello "name.set()"-->
+    <!-- El evento change se produce cuando dejo de escribir y cambio el foco (al siguiente cuadrado o lo que sea) -->
+
+    <h3></h3>
+    <input
+      type="number"
+      class="form-control mt-2"
+      placeholder="Poder"
+      [value]="power()"
+      (input)="power.set(+numberPower.value)"
+      #numberPower
+    />
+    <!-- numberPower.valueAsNumber y +numberPower.value es lo mismo, pero en principio -->
+    <button
+    (click)="addCharacter()"
+    class="mt-2 btn btn-primary"
+    >Agregar</button>
+  </div>
+
+  <div class="cool-12 col-sm-6">
+    <h3>Listado fuertes</h3>
+    <!-- vamos a ocultar a los que esten por debajo de x poder con un condicional-->
+    <ul>
+      <!-- si usamos el track: $index que viene predeterminado puede dar problemas si se esta modificando el array -->
+
+      @for (character of characters(); track character.id; let idx = $index) {
+        <!-- Hasta character.id los representa, lo que ponemos a continuacion va a ser para que coloque su id en una lista desordenada.
+        Creamos la variable idx=$index y la introducimos en el span -->
+
+        <!-- vamos a condicionar todo el li para mostrar solo los fuertes -->
+        @if (character.power > 500) {
+          <li>
+            <!-- Se usa {{}} para aplicar interpolacion-> evaluar expresiones de Ts y mostras el resultado en el html -->
+
+            <span>{{ idx + 1 }} - {{ character.name }}</span>
+
+            <!-- Con [class.clasequesea]="" lo que hacemos es hacer que una variación se cumpla o no en funcion de condiciones-->
+            <strong
+              [class.text-danger]="character.power > 9000"
+              [class.text-primary]="character.power < 9000"
+            >
+              <!-- [ngClass]="powerClasses()" Asi es como se implementaria, dentro del strong o etiqueta pondriamos esta función.-->
+              ({{ character.power }})</strong
+            >
+          </li>
+        } @else {
+          <li><strong>Aqui no hay nadie (no cumple la condicion)</strong></li>
+        }
+      }
+    </ul>
+  </div>
+</section>

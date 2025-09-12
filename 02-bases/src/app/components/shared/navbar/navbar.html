@@ -1,0 +1,43 @@
+<style>
+  nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #212121;
+    color: white;
+    padding: 10px;
+  }
+
+  nav a {
+    color: white;
+    text-decoration: none;
+  }
+
+  /* Cuidado, ya que al estar asi, se visualizará por los path que pase, el / es el de contador estara rojo
+y hero no, pero cuando vamos a /hero su path contiene la / por eso salen ambos rojos.
+Para evitar esto, en los atributos de A ponemos: [routerLinkActiveOptions]="{exact: true}"
+*/
+  nav a.active {
+    color: red;
+  }
+
+</style>
+<nav>
+  <a
+  routerLink="/"
+  routerLinkActive="active"
+  [routerLinkActiveOptions]="{exact: true}"
+  >Contador</a>
+  <!-- Se puede poner asi si se quiere para una señal conmutada y un array de URLs-->
+  <a [routerLink]="['/hero']" [routerLinkActive]="'active'">Hero</a>
+  <!-- El routerLinkActive funciona si quieres asignar el string de una señal si pones "'" -->
+  <a routerLink="/dragon" routerLinkActive="active">
+    DragonBall
+  </a>
+  <a routerLink="/dragonSuper" routerLinkActive="active">
+    DragonBall Super
+  </a>
+
+  <!-- Otros -->
+
+
+</nav>
