@@ -1,6 +1,6 @@
 import { CharacterListComponent } from '../character-list/character-list.component';
 import { Character } from '../../../interfaces/character.interface';
-import { Component, input, signal } from '@angular/core';
+import { Component, output, signal } from '@angular/core';
 
 @Component({
   selector: 'dragonball-character-add',
@@ -13,8 +13,7 @@ export class DragonballCharacterAddComponent {
   name = signal('');
   power =signal(0);
 
-
-
+  newCharacter=output<Character>(); //se crea la variable que se va a enviar
 
 
   addCharacter() {
@@ -23,13 +22,13 @@ export class DragonballCharacterAddComponent {
       return;
     }
     const newCharacter:Character={
-      id: 1000,
+      id: Math.floor(Math.random()*1000),
       name:this.name(),
       power:this.power()
     }
 
       // this.characters.update((list)=>{return [...list, newCharacter];});
-      console.log({newCharacter});
+      this.newCharacter.emit(newCharacter); //se envia la variable
       this.resetFields();
     }
     resetFields(){
