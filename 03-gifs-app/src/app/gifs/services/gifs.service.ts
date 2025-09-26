@@ -1,14 +1,20 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import  type { GiphyResponse } from '../interfaces/giphy.interfaces';
 import { Gif } from '../interfaces/gif.interface';
 import { GifMapper } from '../mapper/gif.mapper';
-import { map, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 
 
 //Para crear  cache vamos a usar: Record
-
+const GIF_KEY='gifs';
+const loadFromLocalStorage=()=>{
+  const gifsFromLocalStorage=localStorage.getItem('GIF_KEY') ?? '[]'; //Record<string,gifs[]>
+  const gifs=JSON.parse(gifsFromLocalStorage)
+  console.log(gifs);
+  return gifs;
+};
 
 
 
@@ -20,13 +26,16 @@ export class GifService {
   trendingGifs=signal<Gif[]>([]); //Creamos una señal que contiene un array de Gif(el de nuestra interfaz))
   trendingGifsLoading= signal(true); //Tan pronto el servicio se crea esto sera true, cuando se cree la instancia y cuando se haya cargado ponerlo en falso
 
-  searchHistory=signal<Record<string,Gif[]>>({});
-  searchHistoryKeys=computed(()=>Object.keys(this.searchHistory())) //Cada vez que la señal history cambie se va a volver a computar el searchhistorykeys
+  searchHistory=signal<Record<string,Gif[]>>(loadFromLocalStorage());
+  searchHistoryKeys=computed(()=>Object.keys(this.searchHistory())) //Cada vez que la señal history cambie se va a volver a computar el searchGIF_KEYs
 
   constructor( ){
     this.loadTrendingGifs();
     console.log('Servicio creado')
   }
+
+  saveHistoryToLocalStorage= effect(()=>
+  localStorage.setItem('GIF_KEY', JSON.stringify(this.searchHistoryKeys())))
 
   loadTrendingGifs(){
 
@@ -45,7 +54,7 @@ export class GifService {
       }) //Para que la petición HTTP se dispare hay que suscribirse, y se realiza con un callback con la respuesta del paso anterior
 
     }
-  searchGifs(query:string){
+  searchGifs(query:string):Observable<Gif[]>{
 
       return this.http
       .get<GiphyResponse>(`${environment.giphyUrl}/gifs/search`,{
@@ -72,6 +81,12 @@ export class GifService {
   // const gifs=GifMapper.mapGiphyItemsToGifArray(resp.data);
   // this.searchedGifs.set(gifs);
   // this.searchedGifsLoading.set(false);
+
+
+  getHistoryGifs(query:string):Gif[]{
+    return this.searchHistory()[query] ?? []; //Devolvemos el valor de una señal por eso() y como es un objeto apuntamos a la llave del query y si es null devuevle un arreglo vacio
+
+  }
 
 
 }

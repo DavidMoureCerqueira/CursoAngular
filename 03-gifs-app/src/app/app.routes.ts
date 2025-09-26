@@ -19,6 +19,12 @@ export const routes: Routes = [
         loadComponent: ()=>
           import('./gifs/pages/search-page/search-page.component'),
       },
+      {
+        //Para mandar argumentos dinamicos se utiliza /:query(argumento)
+        path:'history/:queryRoute',
+        loadComponent: ()=>
+          import('./gifs/pages/gif-history/gif-history.component'),
+      },
 
       // Creamos un redirect para las clases hijas
        {
