@@ -13,6 +13,10 @@ import { RouterLink } from '@angular/router';
 })
 export class CountryListComponent {
 
-  countries=input.required<Country[]>()         //Le decimos que va a recibir un array de RestCountry
+  countries = input.required<Country[]>()         //Le decimos que va a recibir un array de Country
+
+  errorMessage = input<string | unknown | null>()
+  isLoading = input<boolean>(false)
+  isEmpty = input<boolean>(false)
 
 }

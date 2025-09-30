@@ -7,15 +7,22 @@
 <!-- Le enviamos los paises a la lista para que se visualice -->
 
 <!-- @if (isError()){ Verificamos que haya un error esto es de la forma larga-->
-@if(countryResource.error()){
+<!-- @if(countryResource.error()){ -->
 <!-- <h3>{{ isError() }}</h3> -->
-<h3>{{ countryResource.error() }}</h3>
-}<!-- @else { -->
+<!-- <h3>{{ countryResource.error() }}</h3> -->
+<!-- }@else { -->
 <!-- <country-list [countries]="countries()"></country-list> -->
 
-@if (countryResource.hasValue()) {
+<!-- @if (countryResource.hasValue()) { -->
 <!--Con esta comprobacion preguntamos si tiene un valor  -->
-<country-list [countries]="countryResource.value()!"></country-list>
-}
+<!-- <country-list [countries]="countryResource.value()!"></country-list> -->
+<!-- } -->
 <!-- Daba error porque necesitabamos evaluar si hay error que va a pasar porque existe la posibilidad de que llegue un undefined -->
+
+<country-list
+[countries]="countryResource.value() ?? []"
+[errorMessage]="countryResource.error()"
+[isEmpty]="countryResource.value()?.length===0"
+[isLoading]="countryResource.isLoading()"
+> </country-list>
 
